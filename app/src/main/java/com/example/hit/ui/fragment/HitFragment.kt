@@ -32,7 +32,7 @@ class HitFragment : BaseFragment(), HitView, OnItemClickListener<PostViewModel>,
         return HitPresenter(PostUseCase(service))
     }
 
-    private val hitAdapter = HitAdapter(arrayListOf(), this, this)
+    private val hitAdapter = HitAdapter(this, this)
 
     private var actionMode: ActionMode? = null
     private val actionModeCallback = object : ActionMode.Callback {

@@ -12,7 +12,6 @@ import com.example.hit.ui.listener.OnChangedToolbarListener
 import com.example.hit.ui.listener.OnItemClickListener
 
 class HitAdapter(
-    private var data: ArrayList<PostViewModel>?,
     val listener: OnItemClickListener<PostViewModel>,
     private val onChangedToolbarListener: OnChangedToolbarListener
 ) : PagedListRVAdapter<PostViewModel, HitVH>(DIFF_CALBACK, listener), OnItemClickListener<PostViewModel>,
@@ -37,7 +36,7 @@ class HitAdapter(
             field = value
             if (!value) {
                 selectedItems.clear()
-                data?.let { notifyItemRangeChanged(0, it.size, false) }
+                currentList?.let { notifyItemRangeChanged(0, it.size, false) }
             }
         }
 
@@ -50,17 +49,10 @@ class HitAdapter(
         return HitVH(view, this, this)
     }
 
-    override fun getItemCount(): Int = data?.size ?: 0
-
     override fun onBindViewHolder(p0: HitVH, p1: Int) {
-        data?.let {
-            p0.bind(data!![p1], selectedItems.get(p1)) { onItemClick(it[p1], p1) }
+        currentList?.let {
+            p0.bind(it[p1]!!, selectedItems.get(p1)) { onItemClick(it[p1]!!, p1) }
         }
-    }
-
-    fun setData(data: ArrayList<PostViewModel>?) {
-        this.data = data
-        notifyDataSetChanged()
     }
 
     override fun onItemClick(item: PostViewModel, position: Int) {
@@ -81,18 +73,18 @@ class HitAdapter(
     fun getSelectedItems(): List<PostViewModel> {
         val items = arrayListOf<PostViewModel>()
         for (i in 0 until selectedItems.size()) {
-            val data = data?.get(selectedItems.keyAt(i))
+            val data = currentList?.get(selectedItems.keyAt(i))
             data?.let { items.add(it) }
         }
         return items
     }
 
     override fun getItemId(position: Int): Long =
-        data?.get(position)?.title?.hashCode()?.toLong() ?: super.getItemId(position)
+        currentList?.get(position)?.title?.hashCode()?.toLong() ?: super.getItemId(position)
 
     fun addItems(data: ArrayList<PostViewModel>) {
-        val count = this.data?.size ?: 0
-        this.data?.addAll(data)
-        this.notifyItemRangeInserted(count, this.data?.size ?: 0)
+        val count = this.currentList?.size ?: 0
+        this.currentList?.addAll(data)
+        this.notifyItemRangeInserted(count, this.currentList?.size ?: 0)
     }
 }
