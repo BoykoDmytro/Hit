@@ -14,9 +14,6 @@ import moxy.InjectViewState
 @InjectViewState
 class HitPresenter(private val postsUseCase: PostUseCase) : BasePresenter<HitView>() {
 
-    fun deleteItems(selectedItems: List<PostViewModel>) {
-    }
-
     private val postsDataSource = PaginationDataSource<PostViewModel> {
         val page = executeApiRequest<HitPaginationModel> {
             postsUseCase.fetchPosts(it)

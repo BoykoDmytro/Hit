@@ -49,10 +49,15 @@ class HitAdapter(
         return HitVH(view, this, this)
     }
 
-    override fun onBindViewHolder(p0: HitVH, p1: Int) {
+    override fun onBindViewHolder(p0: HitVH, position: Int) {
         currentList?.let {
-            p0.bind(it[p1]!!, selectedItems.get(p1)) { onItemClick(it[p1]!!, p1) }
+            p0.bind(it[position]!!, selectedItems.get(position)) { onItemClick(it[position]!!, position) }
         }
+    }
+
+    override fun onBindViewHolder(holder: HitVH, position: Int, payloads: MutableList<Any>) {
+        super.onBindViewHolder(holder, position, payloads)
+        holder.bind(payloads)
     }
 
     override fun onItemClick(item: PostViewModel, position: Int) {

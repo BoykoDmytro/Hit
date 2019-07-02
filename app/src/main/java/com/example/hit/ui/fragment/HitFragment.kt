@@ -19,7 +19,6 @@ import kotlinx.android.synthetic.main.fragment_hit.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import java.util.*
-import kotlin.collections.ArrayList
 
 class HitFragment : BaseFragment(), HitView, OnItemClickListener<PostViewModel>, OnChangedToolbarListener {
 
@@ -45,7 +44,6 @@ class HitFragment : BaseFragment(), HitView, OnItemClickListener<PostViewModel>,
         }
 
         override fun onActionItemClicked(mode: ActionMode?, menu: MenuItem?): Boolean {
-            presenter.deleteItems(hitAdapter.getSelectedItems())
             return false
         }
 
@@ -100,12 +98,20 @@ class HitFragment : BaseFragment(), HitView, OnItemClickListener<PostViewModel>,
         actionMode = null
     }
 
-    override fun addNewItems(data: ArrayList<PostViewModel>) {
-        hitAdapter.addItems(data)
-    }
-
     override fun onPostsReady(list: List<PostViewModel>) {
-        hitAdapter.submitList(list as PagedList<PostViewModel>)
+        val pL = list as PagedList<PostViewModel>
+        pL.addWeakCallback(null, object: PagedList.Callback(){
+            override fun onChanged(position: Int, count: Int) {
+            }
+
+            override fun onInserted(position: Int, count: Int) {
+                hitSRL.isRefreshing = false
+            }
+
+            override fun onRemoved(position: Int, count: Int) {
+            }
+        })
+        hitAdapter.submitList(pL)
     }
 
     override fun onPostChanged(postViewModel: PostViewModel, position: Int) {
