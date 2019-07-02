@@ -3,10 +3,9 @@ package com.example.hit.data.http.error
 import com.example.hit.data.http.ErrorResult
 import com.example.hit.data.http.RestServiceFactory
 import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.google.gson.annotations.SerializedName
 import retrofit2.Response
-import com.google.gson.JsonParser
-import java.lang.StringBuilder
 
 
 object DefaultErrorParser : ErrorParser {

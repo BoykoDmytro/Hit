@@ -1,4 +1,4 @@
-package com.company.driver.temp
+package com.example.hit.data.models
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName

@@ -1,8 +1,7 @@
-package com.example.hit.data.models
+package com.example.hit.ui.adapter
 
 import android.view.View
-import com.company.driver.temp.Hit
-import com.example.hit.ui.adapter.BaseVH
+import com.example.hit.data.models.Hit
 
 class HitVH(view : View) : BaseVH<Hit>(view){
 
