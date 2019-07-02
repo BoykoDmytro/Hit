@@ -24,7 +24,7 @@ class HitFragment : BaseFragment() {
     private fun initRV() {
         context?.let {
             hitRV.layoutManager = LinearLayoutManager(it)
-            hitRV.adapter = HitAdapter()
+            hitRV.adapter = HitAdapter(arrayListOf())
         }
     }
 }
