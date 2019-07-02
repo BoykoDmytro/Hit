@@ -1,7 +1,8 @@
-package com.example.teat
+package com.example.hit.ui.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.example.hit.R
 
 class MainActivity : AppCompatActivity() {
 
