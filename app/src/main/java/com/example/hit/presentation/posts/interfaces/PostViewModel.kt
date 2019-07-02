@@ -1,9 +1,7 @@
-package com.example.teat.presentation.posts.interfaces
-
-import java.util.*
+package com.example.hit.presentation.posts.interfaces
 
 interface PostViewModel {
     val title: CharSequence?
-    val creationDate: Date?
-    val isSelected: Boolean
+    val creationDate: String?
+    var isSelected: Boolean
 }

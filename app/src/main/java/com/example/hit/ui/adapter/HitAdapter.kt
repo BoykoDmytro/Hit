@@ -1,20 +1,35 @@
 package com.example.hit.ui.adapter
 
+import android.annotation.SuppressLint
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
 import com.example.hit.R
-import com.example.hit.data.models.Hit
+import com.example.hit.android.list.pagination.PagedListRVAdapter
+import com.example.hit.presentation.posts.interfaces.PostViewModel
 import com.example.hit.ui.listener.OnChangedToolbarListener
 import com.example.hit.ui.listener.OnItemClickListener
 
 class HitAdapter(
-    private var data: ArrayList<Hit>?,
-    val listener: OnItemClickListener<Hit>,
+    private var data: ArrayList<PostViewModel>?,
+    val listener: OnItemClickListener<PostViewModel>,
     private val onChangedToolbarListener: OnChangedToolbarListener
-) : RecyclerView.Adapter<HitVH>(), OnItemClickListener<Hit>,
+) : PagedListRVAdapter<PostViewModel, HitVH>(DIFF_CALBACK, listener), OnItemClickListener<PostViewModel>,
     BaseSelectableViewHolder.OnCheckBoxSelectionListener {
+
+    companion object {
+        private val DIFF_CALBACK = object : DiffUtil.ItemCallback<PostViewModel>() {
+            override fun areItemsTheSame(oldItem: PostViewModel, newItem: PostViewModel): Boolean {
+                return oldItem.title == newItem.title
+            }
+
+            @SuppressLint("DiffUtilEquals")
+            override fun areContentsTheSame(oldItem: PostViewModel, newItem: PostViewModel): Boolean {
+                return oldItem == newItem
+            }
+        }
+    }
 
     private val selectedItems = SparseBooleanArray()
     var isInChoiceMode: Boolean = false
@@ -43,12 +58,12 @@ class HitAdapter(
         }
     }
 
-    fun setData(data: ArrayList<Hit>?) {
+    fun setData(data: ArrayList<PostViewModel>?) {
         this.data = data
         notifyDataSetChanged()
     }
 
-    override fun onItemClick(item: Hit, position: Int) {
+    override fun onItemClick(item: PostViewModel, position: Int) {
         listener.onItemClick(item, position)
     }
 
@@ -63,8 +78,8 @@ class HitAdapter(
         onChangedToolbarListener.updateSelectedItemCount(selectedItems.size())
     }
 
-    fun getSelectedItems(): List<Hit> {
-        val items = arrayListOf<Hit>()
+    fun getSelectedItems(): List<PostViewModel> {
+        val items = arrayListOf<PostViewModel>()
         for (i in 0 until selectedItems.size()) {
             val data = data?.get(selectedItems.keyAt(i))
             data?.let { items.add(it) }
@@ -73,9 +88,9 @@ class HitAdapter(
     }
 
     override fun getItemId(position: Int): Long =
-        data?.get(position)?.objectID?.hashCode()?.toLong() ?: super.getItemId(position)
+        data?.get(position)?.title?.hashCode()?.toLong() ?: super.getItemId(position)
 
-    fun addItems(data: java.util.ArrayList<Hit>) {
+    fun addItems(data: ArrayList<PostViewModel>) {
         val count = this.data?.size ?: 0
         this.data?.addAll(data)
         this.notifyItemRangeInserted(count, this.data?.size ?: 0)

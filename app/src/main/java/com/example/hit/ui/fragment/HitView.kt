@@ -1,11 +1,15 @@
 package com.example.hit.ui.fragment
 
-import com.example.hit.data.models.Hit
 import com.example.hit.presentation.base.interfaces.BaseView
+import com.example.hit.presentation.posts.interfaces.PostViewModel
 
 interface HitView : BaseView {
 
     fun hideDeleteMode()
 
-    fun addNewItems(data : ArrayList<Hit>)
+    fun addNewItems(data : ArrayList<PostViewModel>)
+
+    fun onPostsReady(list: List<PostViewModel>)
+
+    fun onPostChanged(postViewModel: PostViewModel, position: Int)
 }

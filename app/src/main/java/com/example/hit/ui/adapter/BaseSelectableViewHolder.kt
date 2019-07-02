@@ -4,13 +4,14 @@ import android.view.View
 import android.widget.CheckBox
 import androidx.appcompat.widget.SwitchCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.hit.android.list.BaseViewHolder
 import com.example.hit.ui.listener.OnItemClickListener
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
 abstract class BaseSelectableViewHolder<T>(view: View, val listener: OnItemClickListener<T>? = null) :
-    RecyclerView.ViewHolder(view) {
+    BaseViewHolder<T>(view) {
 
     companion object {
         private const val mailCurFormat = "yyyy-MM-dd'T'HH:mm:ss+SSSS"

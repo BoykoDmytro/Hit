@@ -6,7 +6,7 @@ import com.example.hit.R
 
 abstract class BaseFragmentActivity : BaseActivity() {
 
-    protected var currentFrament: BaseFragment? = null
+    private var currentFragment: BaseFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,7 +19,7 @@ abstract class BaseFragmentActivity : BaseActivity() {
         transaction.replace(R.id.fragment_holder, fragment, tag)
         transaction.takeIf { addToBackStack }?.addToBackStack(tag)
         transaction.commit()
-        currentFrament = fragment
+        currentFragment = fragment
     }
 
     @LayoutRes

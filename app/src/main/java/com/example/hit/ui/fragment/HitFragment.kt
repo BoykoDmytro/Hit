@@ -3,22 +3,34 @@ package com.example.hit.ui.fragment
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.hit.R
-import com.example.hit.data.models.Hit
+import com.example.hit.data.http.RestServiceFactory
+import com.example.hit.data.http.services.PostService
+import com.example.hit.domain.PostUseCase
 import com.example.hit.presentation.base.implementation.view.BaseFragment
+import com.example.hit.presentation.posts.interfaces.PostViewModel
 import com.example.hit.ui.adapter.HitAdapter
 import com.example.hit.ui.listener.OnChangedToolbarListener
 import com.example.hit.ui.listener.OnItemClickListener
+import kotlinx.android.synthetic.main.activity_with_fragment.toolbar
 import kotlinx.android.synthetic.main.fragment_hit.*
 import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import java.util.*
 import kotlin.collections.ArrayList
 
-class HitFragment : BaseFragment(),HitView, OnItemClickListener<Hit>, OnChangedToolbarListener {
+class HitFragment : BaseFragment(), HitView, OnItemClickListener<PostViewModel>, OnChangedToolbarListener {
 
     @InjectPresenter
     lateinit var presenter: HitPresenter
+
+    @ProvidePresenter
+    fun createPresenter(): HitPresenter {
+        val service = RestServiceFactory.createService(PostService::class.java)
+        return HitPresenter(PostUseCase(service))
+    }
 
     private val hitAdapter = HitAdapter(arrayListOf(), this, this)
 
@@ -51,16 +63,19 @@ class HitFragment : BaseFragment(),HitView, OnItemClickListener<Hit>, OnChangedT
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        initRV()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         activity?.takeIf { it is AppCompatActivity }?.let { it.toolbar.title = getString(R.string.hits) }
-        return super.onCreateView(inflater, container, savedInstanceState)
+        initRV()
     }
 
     private fun initRV() {
         context?.let {
             hitRV.layoutManager = LinearLayoutManager(it)
             hitRV.adapter = hitAdapter
+            hitSRL.setOnRefreshListener {
+                presenter.refresh()
+            }
         }
     }
 
@@ -75,8 +90,8 @@ class HitFragment : BaseFragment(),HitView, OnItemClickListener<Hit>, OnChangedT
         actionMode?.title = String.format(Locale.getDefault(), getString(R.string.selected_item), size)
     }
 
-    override fun onItemClick(item: Hit, position: Int) {
-
+    override fun onItemClick(item: PostViewModel, position: Int) {
+        presenter.proceedItem(item, position)
     }
 
     override fun hideDeleteMode() {
@@ -85,7 +100,15 @@ class HitFragment : BaseFragment(),HitView, OnItemClickListener<Hit>, OnChangedT
         actionMode = null
     }
 
-    override fun addNewItems(data: ArrayList<Hit>) {
+    override fun addNewItems(data: ArrayList<PostViewModel>) {
         hitAdapter.addItems(data)
+    }
+
+    override fun onPostsReady(list: List<PostViewModel>) {
+        hitAdapter.submitList(list as PagedList<PostViewModel>)
+    }
+
+    override fun onPostChanged(postViewModel: PostViewModel, position: Int) {
+        hitAdapter.notifyItemChanged(position)
     }
 }

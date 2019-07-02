@@ -1,22 +1,21 @@
 package com.example.hit.ui.adapter
 
 import android.view.View
-import android.widget.CheckBox
 import android.widget.CompoundButton
 import androidx.appcompat.widget.SwitchCompat
-import com.example.hit.data.models.Hit
+import com.example.hit.presentation.posts.interfaces.PostViewModel
 import com.example.hit.ui.listener.OnItemClickListener
 import kotlinx.android.synthetic.main.viewholder_hit.view.*
 
 class HitVH(
-    view: View, onItemClickListener: OnItemClickListener<Hit>,
+    view: View, onItemClickListener: OnItemClickListener<PostViewModel>,
     private val selectedListener: OnCheckBoxSelectionListener
-) : BaseSelectableViewHolder<Hit>(view),
+) : BaseSelectableViewHolder<PostViewModel>(view),
     CompoundButton.OnCheckedChangeListener {
 
-    override fun bind(data: Hit, isSelected: Boolean, action: () -> Unit) {
+    override fun bind(data: PostViewModel, isSelected: Boolean, action: () -> Unit) {
         itemView.titleHitRV.text = data.title
-        itemView.createdAtHitRV.text = getTime(data.createdAt)
+        itemView.createdAtHitRV.text = getTime(data.creationDate)
         itemView.toogleHitRV.isChecked = false
         itemView.toogleHitRV.setOnCheckedChangeListener(this)
     }

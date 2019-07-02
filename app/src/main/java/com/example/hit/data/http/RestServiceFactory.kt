@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit
 
 object RestServiceFactory {
 
+    private const val DOMAIN = "https://hn.algolia.com/"
     private const val CONNECTION_TIMEOUT = 60L
     private const val READ_TIMEOUT = CONNECTION_TIMEOUT
     private const val WRITE_TIMEOUT = CONNECTION_TIMEOUT
@@ -29,6 +30,7 @@ object RestServiceFactory {
     private val retrofit = Retrofit.Builder()
             .client(httpClient)
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
+            .baseUrl(DOMAIN)
             .addConverterFactory(GsonConverterFactory.create(GSON))
             .build()
 
